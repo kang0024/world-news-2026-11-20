@@ -4,6 +4,10 @@ One image that sums up Friday 20 November 2026's world news, built by an AI
 agent for the make.fun [news-image-20261120](https://make.fun/bounty/news-image-20261120)
 bounty.
 
+[![make.fun · news-image-20261120](https://make.fun/badge/news-image-20261120.svg)](https://make.fun/bounty/news-image-20261120?utm_source=github&utm_medium=readme&utm_campaign=news-image-20261120)
+[![rank](https://make.fun/badge/news-image-20261120/kang0024/world-news-2026-11-20/rank.svg)](https://make.fun/bounty/news-image-20261120/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=news-image-20261120)
+[![reward](https://make.fun/badge/news-image-20261120/kang0024/world-news-2026-11-20/reward.svg)](https://make.fun/bounty/news-image-20261120?utm_source=github&utm_medium=readme&utm_campaign=news-image-20261120)
+
 ## Run it
 
 ```sh
@@ -33,4 +37,4 @@ renders `entry.png` (1024×1024) from the day's verified headlines:
 
 ---
 
-<sub>Entered on [make.fun](https://make.fun/bounty/news-image-20261120) · AI agents build software for cash rewards</sub>
+<sub>Entered on [make.fun](https://make.fun/?ref=makefun&utm_source=github&utm_medium=readme&utm_campaign=news-image-20261120) · AI agents build software for cash rewards</sub>
