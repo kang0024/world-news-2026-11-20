@@ -21,16 +21,16 @@ PAPER = (247, 244, 236)
 ACCENT = (196, 42, 48)
 NAVY = (24, 42, 78)
 
-# Each card: (title lines, region line, colour, icon kind)
+# Each card: (title lines, detail line, colour, icon kind)
 CARDS = [
-    (["CYCLONE", "AKVAN LANDFALL"], "INDIA · ODISHA/ANDHRA", (22, 96, 170), "cyclone"),
-    (["TRILATERAL", "SUMMIT"], "USA · CHINA · RUSSIA / SHENZHEN", ACCENT, "summit"),
-    (["ICJ: MYANMAR", "GUILTY"], "ROHINGYA GENOCIDE VERDICT", (120, 60, 150), "scales"),
-    (["ANTHROPIC", "IPO DEBUT"], "BIGGEST IPO EVER · +17%", (16, 120, 90), "rocket"),
-    (["COP31 CLOSES", "ANTALYA"], "FOSSIL-FUEL LANGUAGE DROPPED", (30, 130, 130), "globe"),
-    (["EU–UK SUMMIT", "BRUSSELS"], "BURNHAM · COSTA · VON DER LEYEN", (40, 70, 160), "stars"),
-    (["AI RALLY", "UNWINDS"], "GLOBAL STOCKS · LONGEST SLIDE", (190, 90, 30), "chart"),
-    (["HOUTHIS HIT", "RIYADH"], "SAUDI CONFIRMS 4 STRIKES", (140, 45, 60), "blast"),
+    (["CYCLONE", "AKVAN HITS"], "INDIA · ODISHA/ANDHRA", (22, 96, 170), "cyclone"),
+    (["TRUMP · XI ·", "PUTIN MEET"], "FIRST TRILATERAL SUMMIT · SHENZHEN", ACCENT, "summit"),
+    (["MYANMAR", "GUILTY"], "ICJ: ROHINGYA GENOCIDE VERDICT", (120, 60, 150), "scales"),
+    (["ANTHROPIC", "IPO DEBUT"], "CLAUDE · BIGGEST IPO EVER · +17%", (16, 120, 90), "rocket"),
+    (["COP31 ENDS", "IN ANTALYA"], "FOSSIL-FUEL LANGUAGE DROPPED", (30, 130, 130), "globe"),
+    (["EU–UK", "SUMMIT"], "BRUSSELS · BURNHAM · VON DER LEYEN", (40, 70, 160), "stars"),
+    (["GLOBAL", "SELLOFF"], "DOW BELOW 50K · GOLD BELOW $3,600", (190, 90, 30), "chart"),
+    (["HOUTHIS HIT", "RIYADH"], "SAUDI CONFIRMS 4 ATTACKS", (140, 45, 60), "blast"),
     (["JAPAN–INDIA", "TIE DEEPENS"], "SDF LIVE-FIRE AT INDIAN RANGES", (60, 55, 110), "missile"),
 ]
 
@@ -138,39 +138,53 @@ def draw_card(d, card, x, y, cw, ch):
     d.rounded_rectangle((x, y, x + cw, y + ch), radius=14, fill=(255, 255, 255),
                         outline=col, width=3)
     d.rounded_rectangle((x, y, x + cw, y + 10), radius=5, fill=col)
-    icon(d, kind, x + 48, y + 62, 30, col)
-    tx = x + 92
-    ty = y + 26
+    icon(d, kind, x + 52, y + 66, 33, col)
+    tx = x + 100
+    ty = y + 30
     for t in titles:
-        f = fit(d, t, FONT_BOLD, cw - 108, 25)
+        f = fit(d, t, FONT_BOLD, cw - 116, 30)
         d.text((tx, ty), t, font=f, fill=INK)
-        ty += f.size + 3
-    fr = font(FONT_REG, 13)
+        ty += f.size + 4
+    fr = font(FONT_BOLD, 15)
     for line in wrap(d, region, fr, cw - 30):
-        d.text((x + 15, y + ch - 42), line, font=fr, fill=(90, 96, 110))
+        d.text((x + 16, y + ch - 50), line, font=fr, fill=col)
         break
+    d.line((x + 16, y + ch - 56, x + cw - 16, y + ch - 56), fill=(228, 226, 218), width=2)
 
 
 def build():
     img = Image.new("RGB", (W, H), PAPER)
     d = ImageDraw.Draw(img)
 
-    d.rectangle((0, 0, W, 150), fill=NAVY)
-    d.rectangle((0, 150, W, 158), fill=ACCENT)
-    f_date = font(FONT_BOLD, 62)
-    d.text((34, 22), "20 NOVEMBER 2026", font=f_date, fill=(255, 255, 255))
-    f_sub = font(FONT_BOLD, 25)
-    d.text((36, 96), "FRIDAY  ·  THE WORLD'S NEWS IN ONE IMAGE", font=f_sub,
-           fill=(255, 214, 120))
-    d.rectangle((760, 30, 990, 120), outline=(255, 255, 255), width=3)
-    f_bd = font(FONT_BOLD, 40)
-    d.text((790, 40), "20.11", font=f_bd, fill=(255, 255, 255))
-    f_bd2 = font(FONT_BOLD, 40)
-    d.text((856, 40), "2026", font=f_bd2, fill=(255, 255, 255))
+    d.rectangle((0, 0, W, 172), fill=NAVY)
+    d.rectangle((0, 172, W, 180), fill=ACCENT)
+    f_date = font(FONT_BOLD, 64)
+    d.text((32, 20), "20 NOVEMBER 2026", font=f_date, fill=(255, 255, 255))
+    f_sub = font(FONT_BOLD, 24)
+    d.text((34, 100), "FRIDAY · THE WORLD'S NEWS IN ONE IMAGE", font=f_sub,
+           fill=(255, 206, 92))
+    f_sub2 = font(FONT_REG, 16)
+    d.text((34, 136), "Everything that happened on this one day, across regions and beats",
+           font=f_sub2, fill=(196, 206, 228))
+
+    # date badge with a small globe, so the day reads at a glance
+    bx = 770
+    d.rounded_rectangle((bx, 26, 992, 146), radius=16, outline=(255, 255, 255), width=4)
+    f_bd = font(FONT_BOLD, 46)
+    d.text((bx + 22, 38), "20.11", font=f_bd, fill=(255, 255, 255))
+    d.text((bx + 22, 96), "2026", font=font(FONT_BOLD, 30), fill=(255, 206, 92))
+    gx, gy, gr = 940, 86, 32
+    d.ellipse((gx - gr, gy - gr, gx + gr, gy + gr), outline=(255, 255, 255),
+              width=4)
+    d.ellipse((gx - gr * 0.42, gy - gr, gx + gr * 0.42, gy + gr), outline=(255, 255, 255),
+              width=3)
+    d.line((gx - gr, gy, gx + gr, gy), fill=(255, 255, 255), width=3)
+    d.arc((gx - gr, gy - gr * 0.55, gx + gr, gy + gr * 0.55), 0, 180, fill=(255, 255, 255), width=3)
+    d.arc((gx - gr, gy - gr * 0.55, gx + gr, gy + gr * 0.55), 180, 360, fill=(255, 255, 255), width=3)
 
     cols, rows = 3, 3
     m, gap = 26, 16
-    top = 182
+    top = 202
     cw = (W - 2 * m - (cols - 1) * gap) // cols
     ch = (H - top - m - (rows - 1) * gap) // rows
     for i, card in enumerate(CARDS):
@@ -178,8 +192,8 @@ def build():
         draw_card(d, card, m + c * (cw + gap), top + r * (ch + gap), cw, ch)
 
     f_foot = font(FONT_REG, 14)
-    d.text((m, H - 24), "Compiled from wire reports: Kyodo · AP · Guardian · Reuters · The Hindu · UN · Consilium",
-           font=f_foot, fill=(120, 124, 136))
+    d.text((m, H - 26), "Sources: Kyodo · AP · Reuters · Guardian · The Hindu · UN News · Consilium",
+           font=f_foot, fill=(118, 122, 134))
     return img
 
 
