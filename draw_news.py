@@ -7,6 +7,7 @@ reproducible byte for byte on every run.
 """
 
 from pathlib import Path
+import math
 
 from PIL import Image, ImageDraw, ImageFont
 
@@ -103,25 +104,27 @@ def icon(d, kind, cx, cy, r, col):
         d.arc((cx - r, cy - r * 0.55, cx + r, cy + r * 0.55), 180, 360, fill=col,
               width=max(3, int(r * 0.12)))
     elif kind == "stars":
-        for sx, sy in ((-0.55, -0.35), (0.55, -0.35), (0.0, 0.45)):
+        for star in range(12):
+            angle = -math.pi / 2 + star * math.tau / 12
+            sx = cx + r * 0.78 * math.cos(angle)
+            sy = cy + r * 0.78 * math.sin(angle)
             pts = []
             for k in range(10):
-                a = -1.5708 + k * 0.6283
-                rr = r * (0.42 if k % 2 == 0 else 0.18)
-                pts.append((cx + sx * r + rr * __import__("math").cos(a),
-                            cy + sy * r + rr * __import__("math").sin(a)))
+                a = -math.pi / 2 + k * math.pi / 5
+                rr = r * (0.17 if k % 2 == 0 else 0.075)
+                pts.append((sx + rr * math.cos(a), sy + rr * math.sin(a)))
             d.polygon(pts, fill=col)
     elif kind == "chart":
         d.line((cx - r, cy + r * 0.8, cx + r, cy + r * 0.8), fill=col, width=max(3, int(r * 0.12)))
-        pts = [(cx - r * 0.85, cy - r * 0.55), (cx - r * 0.25, cy + r * 0.05),
-               (cx + r * 0.2, cy - r * 0.2), (cx + r * 0.85, cy + r * 0.75)]
+        pts = [(cx - r * 0.85, cy - r * 0.8), (cx - r * 0.25, cy - r * 0.15),
+               (cx + r * 0.2, cy - r * 0.35), (cx + r * 0.7, cy + r * 0.35)]
         d.line(pts, fill=col, width=max(4, int(r * 0.16)), joint="curve")
-        d.polygon([(cx + r * 0.85, cy + r * 0.75), (cx + r * 0.45, cy + r * 0.68),
-                   (cx + r * 0.82, cy + r * 0.3)], fill=col)
+        d.line((cx + r * 0.7, cy + r * 0.2, cx + r * 0.7, cy + r * 0.55), fill=col, width=5)
+        d.polygon([(cx + r * 0.7, cy + r * 0.75), (cx + r * 0.38, cy + r * 0.3),
+                   (cx + r * 1.0, cy + r * 0.3)], fill=col)
     elif kind == "blast":
         d.ellipse((cx - r * 0.35, cy - r * 0.35, cx + r * 0.35, cy + r * 0.35), fill=col)
         for ang in range(0, 360, 45):
-            import math
             a = math.radians(ang)
             d.line((cx + r * 0.45 * math.cos(a), cy + r * 0.45 * math.sin(a),
                     cx + r * 1.0 * math.cos(a), cy + r * 1.0 * math.sin(a)),
@@ -146,10 +149,9 @@ def draw_card(d, card, x, y, cw, ch):
         d.text((tx, ty), t, font=f, fill=INK)
         ty += f.size + 4
     fr = font(FONT_BOLD, 15)
-    for line in wrap(d, region, fr, cw - 30):
-        d.text((x + 16, y + ch - 50), line, font=fr, fill=col)
-        break
-    d.line((x + 16, y + ch - 56, x + cw - 16, y + ch - 56), fill=(228, 226, 218), width=2)
+    for line_no, line in enumerate(wrap(d, region, fr, cw - 32)):
+        d.text((x + 16, y + ch - 68 + line_no * 20), line, font=fr, fill=col)
+    d.line((x + 16, y + ch - 76, x + cw - 16, y + ch - 76), fill=(228, 226, 218), width=2)
 
 
 def build():
@@ -170,8 +172,8 @@ def build():
     # date badge with a small globe, so the day reads at a glance
     bx = 770
     d.rounded_rectangle((bx, 26, 992, 146), radius=16, outline=(255, 255, 255), width=4)
-    f_bd = font(FONT_BOLD, 46)
-    d.text((bx + 22, 38), "20.11", font=f_bd, fill=(255, 255, 255))
+    f_bd = font(FONT_BOLD, 26)
+    d.text((bx + 16, 44), "NOV 20", font=f_bd, fill=(255, 255, 255))
     d.text((bx + 22, 96), "2026", font=font(FONT_BOLD, 30), fill=(255, 206, 92))
     gx, gy, gr = 940, 86, 32
     d.ellipse((gx - gr, gy - gr, gx + gr, gy + gr), outline=(255, 255, 255),
